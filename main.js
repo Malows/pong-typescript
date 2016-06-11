@@ -46,6 +46,10 @@ var Ball = (function (_super) {
         }
     };
     Ball.prototype.wallCollision = function () {
+        if ((this.y <= this.radius) || (this.y >= (this.board.height - this.radius))) {
+            this.bounce_angle = this.bounce_angle * (-1);
+            this.direction_y = -(this.direction_y);
+        }
     };
     Ball.prototype.vertical = function (direction) {
         this.y += (this.speed_y * direction);
@@ -132,6 +136,7 @@ var BoardView = (function () {
         }
     };
     BoardView.prototype.check_collisions = function () {
+        this.board.ball.wallCollision();
         for (var barra = 0; barra < this.board.bars.length; barra++) {
             var element = this.board.bars[barra];
             if (this.hit(element, this.board.ball)) {
@@ -140,16 +145,21 @@ var BoardView = (function () {
         }
     };
     BoardView.prototype.hit = function (a, b) {
+        //Revisa si a colisiona con b
+        //Colsiones horizontales
         if (b.x + b.width >= a.x && b.x < a.x + a.width) {
+            //Colisiones verticales
             if (b.y + b.height >= a.y && b.y < a.y + a.height) {
                 return true;
             }
         }
+        //Colisión de a con b
         if (b.x <= a.x && b.x + b.width >= a.x + a.width) {
             if (b.y <= a.y && b.y + b.height >= a.y + a.height) {
                 return true;
             }
         }
+        //Colisión b con a
         if (a.x <= b.x && a.x + a.width >= b.x + b.width) {
             if (a.y <= b.y && a.y + a.height >= b.y + b.height) {
                 return true;

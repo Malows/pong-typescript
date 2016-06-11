@@ -49,7 +49,7 @@ class Ball extends Drawable {
     this.board.agregarBall( this );
   }
   
-  barCollision ( bar : Drawable ) : void {
+  public barCollision ( bar : Drawable ) : void {
     var relative_intersect_y = ( bar.y + (bar.height / 2) ) - this.y;
     var normalized_intersect_y = relative_intersect_y / (bar.height / 2);
     this.bounce_angle = normalized_intersect_y * this.max_bounce_angle;
@@ -62,8 +62,11 @@ class Ball extends Drawable {
     }
   }
   
-  wallCollision () : void {
-      
+  public wallCollision () : void {
+    if ( (this.y <= this.radius ) || (this.y >= (this.board.height - this.radius)) ) {
+      this.bounce_angle = this.bounce_angle * (-1);
+      this.direction_y = -(this.direction_y);
+    }
   }
 
   private vertical ( direction : number ) : void {
@@ -174,6 +177,7 @@ class BoardView {
   }
 
   private check_collisions () : void {
+    this.board.ball.wallCollision();
     for (var barra = 0; barra < this.board.bars.length; barra++) {
       var element = this.board.bars[barra];
       if ( this.hit( element, this.board.ball )) {

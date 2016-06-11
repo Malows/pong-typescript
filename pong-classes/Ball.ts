@@ -41,7 +41,10 @@ export default class Ball extends Drawable {
   }
   
   wallCollision () : void {
-      
+      if ( (this.y <= this.radius ) || (this.y >= (this.board.height - this.radius)) ) {
+      this.bounce_angle = this.bounce_angle * (-1);
+      this.direction_y = -(this.direction_y);
+    }
   }
 
   private vertical ( direction : number ) : void {
